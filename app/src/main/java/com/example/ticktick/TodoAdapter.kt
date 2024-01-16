@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class TodoAdapter(private val todoList: MutableList<Todo>) :
+class TodoAdapter(private val todoList: MutableList<Todo> , private val emptyIconView:View) :
     RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
     class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val todoTitle = itemView.findViewById<TextView>(R.id.tvTodoTitle)
@@ -25,6 +26,7 @@ class TodoAdapter(private val todoList: MutableList<Todo>) :
     fun addTodo(todo:Todo){
         todoList.add(todo)
         notifyItemInserted(todoList.size-1)
+        checkEmptyListVisibility()
     }
 
     fun deleteDoneTodos(){
@@ -32,6 +34,7 @@ class TodoAdapter(private val todoList: MutableList<Todo>) :
             todo.isChecked // if the item is check so remove it
         }
         notifyDataSetChanged()
+        checkEmptyListVisibility()
     }
     private fun toggleStrikeThrough(tvTodoTitle: TextView,isCheckBox: Boolean){
         if (isCheckBox){
@@ -54,8 +57,14 @@ class TodoAdapter(private val todoList: MutableList<Todo>) :
 
         }
 
-
     }
-
+    private fun checkEmptyListVisibility() {
+        emptyIconView as TextView
+        if (todoList.size ==0) {
+            emptyIconView.visibility = View.VISIBLE
+        } else {
+            emptyIconView.visibility = View.GONE
+        }
+    }
     override fun getItemCount() = todoList.size
 }
